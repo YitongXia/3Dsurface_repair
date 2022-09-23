@@ -1,0 +1,3 @@
+/mnt/c/Users/pro/3Dsurface_repair/cmake-build-debug/CMakeFiles/3Dsurface_repair.dir
+/mnt/c/Users/pro/3Dsurface_repair/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/c/Users/pro/3Dsurface_repair/cmake-build-debug/CMakeFiles/rebuild_cache.dir
