@@ -1,21 +1,126 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <list>
+#include <unordered_map>
+#include <map>
+#include <algorithm>
+#include <queue>
+#include <cmath>
 #include "DCEL.hpp"
+
+using namespace std;
+
 
 // forward declarations; these functions are given below main()
 void DemoDCEL();
 void printDCEL(DCEL & D);
 
+typedef std::unordered_map<int,Vertex*> vertexmap;
+typedef std::map<vector<int>,vector<HalfEdge*>> edgemap;
 
 /* 
   Example functions that you could implement. But you are 
   free to organise/modify the code however you want.
   After each function you should have a DCEL without invalid elements!
 */
+// 0.
+
+void importJSON(DCEL &D, const char *file_in) {
+    vertexmap id2vertex;
+    edgemap ver2halfedge;
+
+}
 // 1.
 void importOBJ(DCEL & D, const char *file_in) {
-  // to do
+    vertexmap id2vertex;
+    edgemap ver2halfedge;
+    string line;
+    char c;
+    unsigned int i, j, k;
+    float x, y, z;
+    string si, sj, sk;
+    ifstream in;
+    in.open(file_in);
+    int n = 0;
+    while (getline(in, line))                           // read whole line
+    {
+        if (line.find_first_of("vf") == std::string::npos) continue;     // skip pointless lines
+        istringstream ss(line);                            // put line into a stream for input
+        ss >> c;                                             // get first character
+        switch (c) {
+            case 'v':                                         // VERTICES
+            {
+                ++n;
+                ss >> x >> y >> z;
+                id2vertex[n] = D.createVertex(x, y, z);
+                D.vermap()[id2vertex[n]] = n - 1;
+                break;
+            }
+            case 'f':                                         // FACES
+            {
+                Face *f0 = D.createFace();
+                ss >> si >> sj >> sk;
+                i = std::stoi(si);
+                j = std::stoi(sj);
+                k = std::stoi(sk);
+                HalfEdge *e0 = D.createHalfEdge();
+                HalfEdge *e1 = D.createHalfEdge();
+                HalfEdge *e2 = D.createHalfEdge();
+                e0->origin = id2vertex[i];
+                e0->destination = id2vertex[j];
+                vector<int> l0;
+                l0.push_back(i);
+                l0.push_back(j);
+                sort(l0.begin(),l0.end());
+                ver2halfedge[l0].push_back(e0);
+                e0->prev = e2;
+                e0->next = e1;
+                f0->exteriorEdge = e0;
+                e0->incidentFace = f0;
+
+                e1->origin = id2vertex[j];
+                e1->destination = id2vertex[k];
+                vector<int> l1;
+                l1.push_back(j);
+                l1.push_back(k);
+                sort(l1.begin(),l1.end());
+                ver2halfedge[l1].push_back(e1);
+                e1->prev = e0;
+                e1->next = e2;
+                e1->incidentFace = f0;
+
+                e2->origin = id2vertex[k];
+                e2->destination = id2vertex[i];
+                vector<int> l2;
+                l2.push_back(k);
+                l2.push_back(i);
+                sort(l2.begin(),l2.end());
+                ver2halfedge[l2].push_back(e2);
+                e2->prev = e1;
+                e2->next = e0;
+                e2->incidentFace = f0;
+                break;
+            }
+        }
+    }
+    in.close();
+
+    edgemap::iterator iter;
+    iter = ver2halfedge.begin();
+    for (iter = ver2halfedge.begin(); iter != ver2halfedge.end(); iter++) {
+        vector ver_list = iter->first;
+        vector<HalfEdge*> edge_list = iter->second;
+        if (edge_list.size() != 2) throw std::invalid_argument("Non-manifold!!!");
+        HalfEdge* edge1 = edge_list[0];
+        HalfEdge* edge2 = edge_list[1];
+        edge1->twin = edge2;
+        edge2->twin = edge1;
+    }
+    //printDCEL(D);
 }
+
 // 2.
 void groupTriangles(DCEL & D) {
   // to do

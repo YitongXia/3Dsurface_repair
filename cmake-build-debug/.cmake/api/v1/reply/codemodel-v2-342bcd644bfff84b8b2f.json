@@ -9,7 +9,7 @@
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.24"
+						"string" : "3.17"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "3Dsurface_repair::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-3Dsurface_repair-Debug-a39083efdbaa1f0cdd16.json",
+					"jsonFile" : "target-3Dsurface_repair-Debug-e7a4af3afd0dd110188a.json",
 					"name" : "3Dsurface_repair",
 					"projectIndex" : 0
 				}
